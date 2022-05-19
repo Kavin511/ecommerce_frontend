@@ -93,8 +93,9 @@ class MainActivity : AppCompatActivity() {
             val product = products[position]
             holder.productName.text = product.name
             Glide.with(context.applicationContext)
-                .load("http://images-eu.ssl-images-amazon.com/images/I/41DZ309iN9L._AC_US160_.jpg")
-                .centerCrop()
+                .asBitmap()
+                .load(product.imageUrl)
+                .optionalFitCenter()
                 .error(ContextCompat.getDrawable(context, R.drawable.ic_image))
                 .into(holder.productImage);
             holder.itemView.setOnClickListener { listener.onItemClick(product) }
