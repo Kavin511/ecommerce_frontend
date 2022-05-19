@@ -1,6 +1,7 @@
 package com.devstudio.zivame
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.View.GONE
@@ -9,10 +10,11 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
+import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.core.view.MenuItemCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -25,22 +27,18 @@ import com.devstudio.zivame.viewmodels.ProductViewModelFactory
 
 class MainActivity : AppCompatActivity() {
     private lateinit var badgeText: TextView
-    private lateinit var badgeLayout: FrameLayout
+    private lateinit var badgeLayout: RelativeLayout
     private lateinit var productList: RecyclerView
     private lateinit var adapter: ProductListAdapter
     private var cartMenu: Menu? = null
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.cart_menu, menu)
-        cartMenu = menu
-        initialiseCartMenu()
-        updateBadgeCount()
-        return super.onCreateOptionsMenu(cartMenu)
-    }
 
     private fun initialiseCartMenu() {
-        val item: MenuItem = cartMenu!!.findItem(R.id.badge)
-        MenuItemCompat.setActionView(item, R.layout.actionbar_badge_layout)
-        badgeLayout = cartMenu?.findItem(R.id.badge)?.actionView as FrameLayout
+        badgeLayout = findViewById(R.id.badge)
+        val cartBadge = badgeLayout.findViewById<FrameLayout>(R.id.cart_badge)
+        cartBadge.setOnClickListener {
+            val intent = Intent(this, CartActivity::class.java)
+            startActivity(intent)
+        }
         badgeText = badgeLayout.findViewById<View>(R.id.actionbar_notifcation_textview) as TextView
     }
 
@@ -49,8 +47,7 @@ class MainActivity : AppCompatActivity() {
         badgeText.text = size.toString()
         if (size == 0) {
             badgeText.visibility = GONE
-        }
-        else {
+        } else {
             badgeText.visibility = VISIBLE
         }
     }
@@ -61,11 +58,24 @@ class MainActivity : AppCompatActivity() {
         initialise()
         val viewModel = initialiseProductViewModel()
         observeProductList(viewModel)
+        observeProductList(viewModel)
         initialiseProductList(viewModel)
     }
 
     private fun initialise() {
         productList = findViewById(R.id.products_list)
+        supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
+        supportActionBar!!.setDisplayShowCustomEnabled(true)
+        supportActionBar?.elevation = 0F
+        supportActionBar!!.setCustomView(R.layout.actionbar_layout)
+        supportActionBar?.setBackgroundDrawable(
+            ContextCompat.getDrawable(
+                this,
+                R.drawable.action_bar_background
+            )
+        )
+        initialiseCartMenu()
+        updateBadgeCount()
     }
 
     private fun initialiseProductViewModel(): ProductViewModel {
@@ -87,6 +97,11 @@ class MainActivity : AppCompatActivity() {
             )
             productList.adapter = adapter
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        updateBadgeCount()
     }
 
     private fun initialiseProductList(viewModel: ProductViewModel) {
