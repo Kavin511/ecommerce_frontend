@@ -1,13 +1,14 @@
 package com.devstudio.zivame
 
-import android.content.Context
+import android.animation.Animator
 import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
-import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.ActionBar
@@ -16,11 +17,12 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.devstudio.zivame.adapters.ProductListAdapter
 import com.devstudio.zivame.listeners.OnItemClickListener
-import com.devstudio.zivame.models.ShoppingCartItem
 import com.devstudio.zivame.models.Product
+import com.devstudio.zivame.models.ShoppingCartItem
 import com.devstudio.zivame.repository.ProductRepository
 import com.devstudio.zivame.repository.ShoppingCartRepository
 import com.devstudio.zivame.service.ProductService
@@ -33,10 +35,11 @@ class MainActivity : AppCompatActivity() {
     private lateinit var badgeLayout: RelativeLayout
     private lateinit var productList: RecyclerView
     private lateinit var adapter: ProductListAdapter
-
+    private lateinit var cartBadge:FrameLayout
+    lateinit var progressBar:ProgressBar
     private fun initialiseCartMenu() {
         badgeLayout = findViewById(R.id.badge)
-        val cartBadge = badgeLayout.findViewById<FrameLayout>(R.id.cart_badge)
+        cartBadge = badgeLayout.findViewById<FrameLayout>(R.id.cart_badge)
         cartBadge.setOnClickListener {
             val intent = Intent(this, CartActivity::class.java)
             startActivity(intent)
@@ -66,6 +69,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun initialise() {
         productList = findViewById(R.id.products_list)
+        progressBar = findViewById(R.id.progress_circular)
         supportActionBar!!.displayOptions = ActionBar.DISPLAY_SHOW_CUSTOM
         supportActionBar!!.setDisplayShowCustomEnabled(true)
         supportActionBar?.elevation = 0F
@@ -92,6 +96,7 @@ class MainActivity : AppCompatActivity() {
     private fun observeProductList(viewModel: ProductViewModel) {
         viewModel.fetchProducts()
         viewModel.productList.observe(this) {
+            progressBar.visibility = GONE
             adapter = ProductListAdapter(
                 viewModel.productList.value ?: listOf(),
                 applicationContext,
@@ -113,7 +118,7 @@ class MainActivity : AppCompatActivity() {
             productClickListener()
         )
         productList.adapter = adapter
-        productList.layoutManager = GridLayoutManager(this, 2)
+        productList.layoutManager = GridLayoutManager(this, 1)
     }
 
     private fun productClickListener() = object : OnItemClickListener {
@@ -133,6 +138,11 @@ class MainActivity : AppCompatActivity() {
         shoppingCartItem.imageUrl = item.imageUrl
         shoppingCartRepository.addProducts(shoppingCartItem)
         updateBadgeCount()
+        showAddProductToCartAnimation()
+    }
+
+    private fun showAddProductToCartAnimation() {
+       cartBadge.startAnimation(AnimationUtils.loadAnimation(this,R.anim.shake))
     }
 
 }

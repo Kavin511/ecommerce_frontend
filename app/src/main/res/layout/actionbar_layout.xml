@@ -6,6 +6,7 @@
     android:layout_gravity="center"
     android:backgroundTint="@color/white"
     android:gravity="center"
+    android:animateLayoutChanges="true"
     android:background="@drawable/product_item_background"
     android:orientation="horizontal">
 
