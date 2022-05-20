@@ -36,17 +36,28 @@
                 android:padding="5dp"
                 android:textAlignment="viewStart"
                 android:textSize="14sp" />
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
 
-            <RatingBar
-                android:id="@+id/rating"
-                style="?android:attr/ratingBarStyleSmall"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:isIndicator="true"
-                android:numStars="5"
-                android:padding="10dp"
-                android:stepSize=".1"
-                android:textAlignment="viewStart" />
+    <RatingBar
+        android:id="@+id/rating"
+        style="?android:attr/ratingBarStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:padding="10dp"
+        android:stepSize=".1"
+        android:textAlignment="viewStart" />
+
+    <TextView
+        android:id="@+id/price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="16sp" />
+</LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/add_item"

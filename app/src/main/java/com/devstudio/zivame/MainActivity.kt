@@ -17,8 +17,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.daimajia.androidanimations.library.Techniques
-import com.daimajia.androidanimations.library.YoYo
 import com.devstudio.zivame.adapters.ProductListAdapter
 import com.devstudio.zivame.listeners.OnItemClickListener
 import com.devstudio.zivame.models.Product

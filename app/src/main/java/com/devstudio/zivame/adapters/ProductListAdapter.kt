@@ -4,7 +4,6 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.RatingBar
 import android.widget.TextView
@@ -28,6 +27,7 @@ class ProductListAdapter(
         var productImage: ImageView = view.findViewById(R.id.product_image) as ImageView
         var rating: RatingBar = view.findViewById(R.id.rating) as RatingBar
         var addButton: MaterialButton = view.findViewById(R.id.add_item) as MaterialButton
+        var price: TextView = view.findViewById(R.id.price) as TextView
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -40,7 +40,8 @@ class ProductListAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = products[position]
         holder.productName.text = product.name
-        holder.rating.rating= product.rating.toFloat()
+        holder.rating.rating = product.rating.toFloat()
+        holder.price.text = "$${product.price}"
         Glide.with(context.applicationContext)
             .asBitmap()
             .load(product.imageUrl)

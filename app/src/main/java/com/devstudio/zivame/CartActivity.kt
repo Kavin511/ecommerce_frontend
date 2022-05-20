@@ -58,7 +58,7 @@ class CartActivity : AppCompatActivity() {
         Handler().postDelayed({
                                   shoppingCartRepository.clear()
                                   showSuccessScreen()
-                              }, 3000)
+                              }, 30000)
     }
 
     private fun showSuccessScreen() {

@@ -24,7 +24,8 @@
         android:layout_gravity="right|end|top"
         android:background="@drawable/badge_background"
         android:gravity="center"
+        android:text="12"
         android:textColor="@android:color/white"
-        android:textSize="8sp"/>
+        android:textSize="14sp"/>
 
 </FrameLayout>
