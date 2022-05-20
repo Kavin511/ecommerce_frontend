@@ -2,7 +2,6 @@ package com.devstudio.zivame.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.devstudio.zivame.cart.ShoppingCart
 import com.devstudio.zivame.models.Product
 import com.devstudio.zivame.models.ProductsResponse
 import com.devstudio.zivame.repository.ProductRepository
@@ -11,7 +10,6 @@ import retrofit2.Response
 
 class ProductViewModel constructor(private val repository: ProductRepository) : ViewModel() {
     val productList = MutableLiveData<List<Product>?>()
-    var cart=MutableLiveData<ShoppingCart>()
     val errorMessage = MutableLiveData<String>()
     fun fetchProducts() {
         val response = repository.fetchProducts()

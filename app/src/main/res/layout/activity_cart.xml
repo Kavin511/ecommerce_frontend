@@ -6,16 +6,41 @@
     android:layout_height="match_parent"
     tools:context=".CartActivity">
 
+    <LinearLayout
+        android:id="@+id/success_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:visibility="gone"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:layout_gravity="center"
+            android:elevation="0dp"
+            android:src="@drawable/ic_success" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#1C9E0B"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:padding="10dp"
+            android:text="Ordered successfully" />
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/progress_circular"
-        android:layout_height="wrap_content"
-        android:indeterminate="true"
-        android:layout_centerInParent="true"
-        android:visibility="gone"
-        android:indeterminateBehavior="repeat"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:indeterminateBehavior="repeat"
         android:progressDrawable="@color/teal_700"
-        android:progressTint="@color/teal_200" />
+        android:progressTint="@color/teal_200"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/cart_list"

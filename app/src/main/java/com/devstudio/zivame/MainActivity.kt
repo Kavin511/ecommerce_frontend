@@ -14,23 +14,25 @@ import androidx.appcompat.app.ActionBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.devstudio.zivame.cart.ShoppingCart
+import com.devstudio.zivame.adapters.ProductListAdapter
+import com.devstudio.zivame.listeners.OnItemClickListener
+import com.devstudio.zivame.models.ShoppingCartItem
 import com.devstudio.zivame.models.Product
 import com.devstudio.zivame.repository.ProductRepository
+import com.devstudio.zivame.repository.ShoppingCartRepository
 import com.devstudio.zivame.service.ProductService
 import com.devstudio.zivame.viewmodels.ProductViewModel
 import com.devstudio.zivame.viewmodels.ProductViewModelFactory
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
     private lateinit var badgeText: TextView
     private lateinit var badgeLayout: RelativeLayout
     private lateinit var productList: RecyclerView
     private lateinit var adapter: ProductListAdapter
-    private var cartMenu: Menu? = null
 
     private fun initialiseCartMenu() {
         badgeLayout = findViewById(R.id.badge)
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateBadgeCount() {
-        val size = ShoppingCart.getInstance()?.size
+        val size = shoppingCartRepository.getCartCount()
         badgeText.text = size.toString()
         if (size == 0) {
             badgeText.visibility = GONE
@@ -120,50 +122,17 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val shoppingCartRepository = ShoppingCartRepository()
+
     private fun addItemToShoppingCart(item: Product) {
-        val cart = ShoppingCart.getInstance()
-        cart?.addItem(item)
+        val shoppingCartItem = ShoppingCartItem()
+        shoppingCartItem.id = Calendar.getInstance().timeInMillis
+        shoppingCartItem.name = item.name
+        shoppingCartItem.rating = item.rating
+        shoppingCartItem.price = item.price
+        shoppingCartItem.imageUrl = item.imageUrl
+        shoppingCartRepository.addProducts(shoppingCartItem)
         updateBadgeCount()
     }
 
-    internal class ProductListAdapter(
-        private val products: List<Product>,
-        private val context: Context,
-        private val listener: OnItemClickListener
-    ) :
-        RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
-
-        class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            var productName: TextView = view.findViewById(R.id.product_name) as TextView
-            var productImage: ImageView = view.findViewById(R.id.product_image) as ImageView
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-            val context: Context = parent.context
-            val inflater = LayoutInflater.from(context)
-            val view = inflater.inflate(R.layout.product_item, parent, false)
-            return ViewHolder(view)
-        }
-
-        override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val product = products[position]
-            holder.productName.text = product.name
-            Glide.with(context.applicationContext)
-                .asBitmap()
-                .load(product.imageUrl)
-                .optionalFitCenter()
-                .error(ContextCompat.getDrawable(context, R.drawable.ic_image))
-                .into(holder.productImage);
-            holder.itemView.setOnClickListener { listener.onItemClick(product) }
-        }
-
-        override fun getItemCount(): Int {
-            return products.size
-        }
-    }
-
-}
-
-interface OnItemClickListener {
-    fun onItemClick(item: Product)
 }
